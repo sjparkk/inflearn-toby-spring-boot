@@ -22,16 +22,18 @@ public class TobyspringbootApplication {
             servletContext.addServlet("hello", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+                    String name = req.getParameter("name");
+
                     resp.setStatus(HttpStatus.OK.value());
                     resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-                    resp.getWriter().println("Hello Servlet");
+                    resp.getWriter().println("Hello " + name);
                 }
             }).addMapping("/hello");
         });
         //톰캣 서블릿 컨테이너 동작
         webServer.start();
 
-        //실행 시 -> Tomcat started on port(s): 8080 (http) with context path ''
+        //http -v ":8080/hello?name=Spring"
     }
 
 }
