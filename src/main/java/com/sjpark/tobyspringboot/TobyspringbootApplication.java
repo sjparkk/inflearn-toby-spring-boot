@@ -3,6 +3,7 @@ package com.sjpark.tobyspringboot;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -17,26 +18,24 @@ public class TobyspringbootApplication {
 
     public static void main(String[] args) {
 
-        //추상화
+        GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.registerBean(HelloController.class);
+        applicationContext.refresh();
+
         ServletWebServerFactory servletWebServerFactory = new TomcatServletWebServerFactory();
         WebServer webServer = servletWebServerFactory.getWebServer(servletContext -> {
-            HelloController helloController = new HelloController();
-
-            servletContext.addServlet("frontcontroller", new HttpServlet() {
+            servletContext.addServlet("hello", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
                     // 프론트 컨트롤러 변경으로 인한 인증, 보안, 다국어, 공통 기능 들의 처리를 맡음.
-
                     if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name()))  {
                         String name = req.getParameter("name");
 
+                        HelloController helloController = applicationContext.getBean(HelloController.class);
                         String ret = helloController.hello(name);
 
-                        resp.setStatus(HttpStatus.OK.value());
-                        resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+                        resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
                         resp.getWriter().println(ret);
-                    } else if (req.getRequestURI().equals("/user")) {
-
                     } else {
                         resp.setStatus(HttpStatus.NOT_FOUND.value());
                     }
