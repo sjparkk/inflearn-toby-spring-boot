@@ -20,6 +20,7 @@ public class TobyspringbootApplication {
 
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.registerBean(HelloController.class);
+        applicationContext.registerBean(SimpleHelloService.class);
         applicationContext.refresh();
 
         ServletWebServerFactory servletWebServerFactory = new TomcatServletWebServerFactory();
