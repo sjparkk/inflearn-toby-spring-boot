@@ -1,5 +1,6 @@
 package com.sjpark.tobyspringboot;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +12,21 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ComponentScan
 public class TobyspringbootApplication {
 
-    @Bean
-    public ServletWebServerFactory servletWebServerFactory() {
-        return new TomcatServletWebServerFactory();
-    }
+    /**
+     * ServletWebServerFactory 없을 시 Error
+     Description:
+
+     Web application could not be started as there was no org.springframework.boot.web.servlet.server.ServletWebServerFactory bean defined in the context.
+
+     Action:
+
+     Check your application's dependencies for a supported servlet web server.
+     Check the configured web application type.
+     */
+//    @Bean
+//    public ServletWebServerFactory servletWebServerFactory() {
+//        return new TomcatServletWebServerFactory();
+//    }
 
     @Bean
     public DispatcherServlet dispatcherServlet() {
@@ -22,10 +34,6 @@ public class TobyspringbootApplication {
     }
 
     public static void main(String[] args) {
-        MySpringApplication.run(TobyspringbootApplication.class, args);
+        SpringApplication.run(TobyspringbootApplication.class, args);
     }
-
-//    public static void main(String[] args) {
-//        SpringApplication.run(TobyspringbootApplication.class, args);
-//    }
 }
